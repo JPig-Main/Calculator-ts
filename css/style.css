@@ -1,0 +1,67 @@
+body {
+  margin: 0%;
+}
+
+.head-container {
+  height: 75px;
+  background-color: hsl(130, 60%, 55%);
+
+  display: grid;
+  grid-template-columns: [_header]3fr repeat(4, 1fr);
+}
+
+header {
+  text-align: center;
+  line-height: 75px;
+  font-size: 30px;
+  color: #eee;
+}
+
+body {
+  margin: 0%;
+  justify-self: center;
+}
+
+/* 縦方向(主軸)の中央揃えさせる */
+.calc-container {
+  margin: 50px auto auto;
+  align-self: center;
+  width: 380px;
+  height: 440px;
+  background-color: #ccc;
+}
+
+.calc-display-container {
+  margin: auto;
+  width: 334px;
+  height: 100px;
+  background-color: #313131;
+  border: 1px solid #eee;
+}
+
+#calc-display {
+  margin: auto;
+  width: 80%;
+  text-align: end;
+  line-height: 100px;
+  color: #eee;
+  font-size: 24px;
+}
+
+.calc-container > table.calc-input {
+  margin: auto;
+  border-collapse: collapse;
+}
+
+.calc-container > table.calc-input td {
+  width: 80px;
+  height: 60px;
+  text-align: center;
+  border: 2px solid #eee;
+  background-color: #313131;
+  color: #fff;
+}
+
+.calc-container > table.calc-input td.clicked {
+  opacity: 0.7;
+}
