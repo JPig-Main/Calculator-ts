@@ -33,8 +33,7 @@
         this.inputs.shift();
         this.inputs.push(input);
         this.isAns = false;
-      } else if (this.inputs.length === 1) {
-        // ここらへんで記号が入力できない
+      } else if (this.inputs.length === 1) {  
         switch (this.inputs[0]) {
           case "0":
           case "Syntax Error":
