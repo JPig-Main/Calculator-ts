@@ -46,7 +46,6 @@
       } else {
         this.inputs.push(input);
       }
-      console.log(`inputs : ${this.inputs}`);
     };
     public popInput = (): string => {
       return this.inputs.pop();
@@ -88,7 +87,6 @@
           }
         } else {
           if (!isSymbol(ch)) {
-            console.log("symbol error");
             return false;
           }
           isBfSmb = true;
@@ -99,8 +97,6 @@
     };
     private calcAns = (): void => {
       for (let i = 0; i < this.symbols.length; ) {
-        console.log(`numbers : ${this.numbers}`);
-        console.log(`symbols : ${this.symbols}`);
         if (this.symbols[i] === "×") {
           const bfCalc: Array<number> = this.numbers.splice(i, 2);
           this.symbols.splice(i, 1);
@@ -112,12 +108,8 @@
         } else {
           i++;
         }
-        console.log(`numbers : ${this.numbers}`);
-        console.log(`symbols : ${this.symbols}`);
       }
       for (let i = 0; i < this.symbols.length; ) {
-        console.log(`numbers : ${this.numbers}`);
-        console.log(`symbol : ${this.symbols}`);
         if (this.symbols[i] === "+") {
           const bfCalc: Array<number> = this.numbers.splice(i, 2);
           this.symbols.splice(i, 1);
@@ -129,14 +121,11 @@
         } else {
           i++;
         }
-        console.log(`numbers : ${this.numbers}`);
-        console.log(`symbols : ${this.symbols}`);
       }
 
       this.symbols.forEach((el) => {});
     };
     public calc = (): void => {
-      // @電卓の計算中心部分
       // 文法エラー
       if (!this.convertInputs()) {
         this.numbers.length = 0;
