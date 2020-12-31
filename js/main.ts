@@ -1,5 +1,4 @@
 "use strict";
-
 {
   const isNumber = (ch: string): boolean => {
     if (ch.length !== 1) {
@@ -63,7 +62,6 @@
       return this.sign;
     };
     public reversePm = (): void => {
-      // TODO 表記でも見えるようにする
       this.setSign(
         this.getSign() === this.SIGN.plus ? this.SIGN.plus : this.SIGN.minus
       );
@@ -74,7 +72,6 @@
       let isBfSmb: boolean = true;
       while (this.inputs.length > 0) {
         ch = this.inputs.shift();
-        // TODO 小数点にも対応させる
         if (isNumber(ch)) {
           const numberPos: number = this.numbers.length - 1;
           const number: number = parseInt(ch, 10);
@@ -141,9 +138,7 @@
       this.bfAns = this.numbers[0];
       this.isAns = true;
     };
-    public setBfAns = (): void => {
-      // @桁を1桁打つinputsに格納する
-    };
+    public setBfAns = (): void => {};
   }
 
   class InOut {
