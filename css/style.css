@@ -7,14 +7,25 @@ body {
   background-color: hsl(130, 60%, 55%);
 
   display: grid;
-  grid-template-columns: [_header]3fr repeat(4, 1fr);
+  grid-template-columns: [_header]3fr 4fr [_github]1fr;
 }
 
 header {
   text-align: center;
   line-height: 75px;
   font-size: 30px;
-  color: #eee;
+  color: #fff;
+}
+
+.github {
+  text-align: end;
+  line-height: 75px;
+  font-size: 20px;
+  color: #fff;
+  cursor: pointer;
+}
+.github:hover {
+  text-shadow: 2px 2px #666;
 }
 
 body {
