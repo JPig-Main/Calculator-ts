@@ -29,11 +29,11 @@
     private sign: number = this.SIGN.plus;
 
     public pushInput = (input: string): void => {
-      if (this.isAns) {
+      if (this.isAns && isNumber(input)) {
         this.inputs.shift();
         this.inputs.push(input);
         this.isAns = false;
-      } else if (this.inputs.length === 1) {  
+      } else if (this.inputs.length === 1) {
         switch (this.inputs[0]) {
           case "0":
           case "Syntax Error":
@@ -68,24 +68,22 @@
 
     private convertInputs = (): boolean => {
       let ch: string = "";
-      let isBfSmb: boolean = true;
+      let isBfNum: boolean = true;
+      let numberStr : string = "";
       while (this.inputs.length > 0) {
         ch = this.inputs.shift();
-        if (isNumber(ch)) {
-          const numberPos: number = this.numbers.length - 1;
-          const number: number = parseInt(ch, 10);
-          if (isBfSmb) {
-            isBfSmb = false;
-            this.numbers.push(number);
-          } else {
-            this.numbers[numberPos] *= 10;
-            this.numbers[numberPos] += number;
-          }
+        if (isNumber(ch) || ch == ".") {
+          numberStr += ch;
+          isBfNum = true;
         } else {
           if (!isSymbol(ch)) {
             return false;
           }
-          isBfSmb = true;
+          if (isBfNum) {
+            this.numbers.push(parseInt(numberStr, 10));
+            numberStr = "";
+            isBfNum = false;
+          }
           this.symbols.push(ch);
         }
       }
