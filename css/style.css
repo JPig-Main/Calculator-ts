@@ -7,7 +7,7 @@ body {
   background-color: hsl(130, 60%, 55%);
 
   display: grid;
-  grid-template-columns: [_header]3fr 4fr [_github]1fr;
+  grid-template-columns: [_header]2fr 1fr [_github]1fr;
 }
 
 header {
@@ -19,7 +19,8 @@ header {
 }
 
 .github {
-  text-align: end;
+  grid-column: _github;
+  text-align: center;
   line-height: 75px;
   font-size: 20px;
   color: #fff;
