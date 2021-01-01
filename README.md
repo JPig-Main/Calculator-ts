@@ -2,7 +2,7 @@
 
 ## Overview
 
-Web 上で使える, シンプルな電卓です.
+Web 上で使えるシンプルな電卓です.
 
 (URL : https://jpig-main.github.io/calculator-ts/)
 
