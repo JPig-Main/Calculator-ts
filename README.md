@@ -4,7 +4,7 @@
 
 Web 上で使えるシンプルな電卓です.
 
-(URL : https://jpig-main.github.io/calculator-ts/)
+(URL : https://jpig-main.github.io/Calculator-ts/)
 
 ## Usage
 
@@ -31,4 +31,4 @@ Web 上で使えるシンプルな電卓です.
 
 | Version  |   Date   | Update Point                 |
 | :------: | :------: | :--------------------------- |
-| 2021/1/1 | ver1.0.0 | Calculator-ts を公開しました |
+| ver.1.0.0 | 2021/1/1 | Calculator-ts を公開しました |
