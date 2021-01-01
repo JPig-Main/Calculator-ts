@@ -1,29 +1,34 @@
 "use strict";
 {
+  // 計算中心部
   class Calc {
-    private inputs: Array<string> = ["0"];
+    // バッファ
+    private buffer: Array<string> = ["0"];
+    // 数のバッファ
     private numbers: Array<number> = [];
+    // 計算記号のバッファ
     private symbols: Array<string> = [];
-    private isAns: boolean = false;
-    private bfAns: number = 0;
+    // バッファが答えかどうか
+    protected isAns: boolean = false;
+    // 前の答え
+    protected bfAns: number = 0;
 
-    isNumber = (ch: string): boolean => {
+    // 数, 計算記号, 符号の判定
+    protected isNumber = (ch: string): boolean => {
       if (ch.length !== 1) {
         return false;
       }
       const numberCh = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
       return numberCh.some((el) => el === ch) ? true : false;
     };
-
-    isSymbol = (ch: string): boolean => {
+    protected isSymbol = (ch: string): boolean => {
       if (ch.length !== 1) {
         return false;
       }
       const symbolCh = ["+", "-", "×", "÷"];
       return symbolCh.some((el) => el === ch) ? true : false;
     };
-
-    isSign = (ch: string): boolean => {
+    protected isSign = (ch: string): boolean => {
       if (ch.length !== 1) {
         return false;
       }
@@ -31,46 +36,77 @@
       return signCh.some((el) => el === ch) ? true : false;
     };
 
-    public pushInput = (input: string): void => {
+    // バッファの操作
+    public pushBuffer = (input: string): void => {
       const MAX_RENDER_NUM: number = 18;
-      if (this.inputs.length >= MAX_RENDER_NUM) {
+      if (this.buffer.length >= MAX_RENDER_NUM) {
         return;
       }
       if (this.isAns) {
         this.isAns = false;
-        if (this.isNumber(input)) {
-          this.inputs.length = 0;
+        if (!this.isSymbol(input)) {
+          this.buffer.length = 0;
         }
-      } else if (this.inputs.length === 1) {
-        switch (this.inputs[0]) {
+      } else if (this.buffer.length === 1) {
+        switch (this.buffer[0]) {
           case "0":
+            if (!this.isSymbol(input)) {
+              console.log(`input : ${input}`);
+              this.buffer.shift();
+            }
+            break;
           case "Syntax Error":
-            this.inputs.shift();
+            this.buffer.shift();
         }
       }
-      this.inputs.push(input);
+      this.buffer.push(input);
     };
-    public popInput = (): string => {
-      return this.inputs.pop();
+    public popBuffer = (): string => {
+      if (this.buffer.length === 1) {
+        this.buffer[0] = "0";
+        return;
+      }
+      return this.buffer.pop();
     };
-    public clearInputs = (): void => {
-      this.inputs.length = 0;
+    public clearBuffer = (): void => {
+      this.buffer.length = 0;
     };
-    public getInputs = (): Array<string> => {
-      return this.inputs;
+    public getBuffer = (): Array<string> => {
+      return this.buffer;
     };
 
-    private convertInputs = (): boolean => {
+    // 計算中心部分
+    public calc = (): void => {
+      // 文法エラー
+      if (!this.convertBuffer()) {
+        this.numbers.length = 0;
+        this.symbols.length = 0;
+        this.buffer.length = 0;
+        this.buffer.push("Syntax Error");
+        return null;
+      }
+      this.calcAns();
+      this.buffer.length = 0;
+      String(this.numbers)
+        .split("")
+        .forEach((val) => {
+          this.buffer.push(val);
+        });
+      this.bfAns = this.numbers[0];
+      this.numbers.length = 0;
+      this.isAns = true;
+    };
+    protected convertBuffer = (): boolean => {
       let isBfNum: boolean = false;
       let numberStr: string = "";
-      const firstInputsLength: number = this.inputs.length;
-      while (this.inputs.length > 0) {
-        const ch = this.inputs.shift();
+      const firstbufferLength: number = this.buffer.length;
+      while (this.buffer.length > 0) {
+        const ch = this.buffer.shift();
         if (this.isNumber(ch) || ch == ".") {
           numberStr += ch;
           isBfNum = true;
         } else if (
-          this.inputs.length === firstInputsLength - 1 &&
+          this.buffer.length === firstbufferLength - 1 &&
           this.isSign(ch)
         ) {
           console.log(`ch = ${ch}`);
@@ -94,7 +130,7 @@
       }
       return this.numbers.length - this.symbols.length == 1 ? true : false;
     };
-    private calcAns = (): void => {
+    protected calcAns = (): void => {
       for (let i = 0; i < this.symbols.length; ) {
         if (this.symbols[i] === "×") {
           const bfCalc: Array<number> = this.numbers.splice(i, 2);
@@ -124,49 +160,28 @@
 
       this.symbols.forEach((el) => {});
     };
-    public calc = (): void => {
-      // 文法エラー
-      if (!this.convertInputs()) {
-        this.numbers.length = 0;
-        this.symbols.length = 0;
-        this.inputs.length = 0;
-        this.inputs.push("Syntax Error");
-        return null;
-      }
-      this.calcAns();
-      this.inputs.length = 0;
-      String(this.numbers)
-        .split("")
-        .forEach((val) => {
-          this.inputs.push(val);
-        });
-      this.bfAns = this.numbers[0];
-      this.numbers.length = 0;
-      this.isAns = true;
-    };
-    public setBfAns = (): void => {
-      console.log(
-        `bfAns[${String(this.bfAns).split("").length}] : ${String(
-          this.bfAns
-        ).split("")}`
-      );
+
+    // 前の答えをバッファに追加
+    public addBufferFromBfAns = (): void => {
       if (!this.bfAns && this.bfAns !== 0) {
         return;
       }
-      if (!this.isSymbol(this.inputs[this.inputs.length - 1])) {
+      if (!this.isSymbol(this.buffer[this.buffer.length - 1])) {
         return;
       }
       String(this.bfAns)
         .split("")
         .forEach((val) => {
           console.log(`val : ${val}`);
-          this.inputs.push(val);
+          this.buffer.push(val);
         });
     };
   }
 
+  // 入出力
   class InOut {
-    private INPUT_BTN = {
+    // 入力ボタンのHTML要素
+    protected INPUT_BTN = {
       zero: document.getElementById("zero"),
       one: document.getElementById("one"),
       two: document.getElementById("two"),
@@ -187,100 +202,173 @@
       del: document.getElementById("del"),
       ans: document.getElementById("ans"),
     };
-
-    private OUTPUT = {
+    // 出力のHTML要素
+    protected OUTPUT = {
       display: document.getElementById("calc-display"),
     };
+    // Calcクラスを利用
+    protected calc = new Calc();
 
-    private calc = new Calc();
-
+    // 入出力操作
     constructor() {
       Object.keys(this.INPUT_BTN).forEach((key) => {
-        this.configInput(key);
+        this.configBtn(key);
       });
+      this.configKey();
     }
-
-    private clicked = (node: any): void => {
-      node.classList.add("clicked");
-      const timerId = setTimeout(() => {
-        node.classList.remove("clicked");
-        clearTimeout(timerId);
-      }, 100);
-    };
-
-    private configInput = (key: any): void => {
+    protected configBtn = (key: any): void => {
       const node = this.INPUT_BTN[key];
       node.addEventListener("click", () => {
-        this.clicked(node);
+        this.clickedMotion(node);
         switch (key) {
           case "zero":
-            this.calc.pushInput("0");
+            this.calc.pushBuffer("0");
             break;
           case "one":
-            this.calc.pushInput("1");
+            this.calc.pushBuffer("1");
             break;
           case "two":
-            this.calc.pushInput("2");
+            this.calc.pushBuffer("2");
             break;
           case "three":
-            this.calc.pushInput("3");
+            this.calc.pushBuffer("3");
             break;
           case "four":
-            this.calc.pushInput("4");
+            this.calc.pushBuffer("4");
             break;
           case "five":
-            this.calc.pushInput("5");
+            this.calc.pushBuffer("5");
             break;
           case "six":
-            this.calc.pushInput("6");
+            this.calc.pushBuffer("6");
             break;
           case "seven":
-            this.calc.pushInput("7");
+            this.calc.pushBuffer("7");
             break;
           case "eight":
-            this.calc.pushInput("8");
+            this.calc.pushBuffer("8");
             break;
           case "nine":
-            this.calc.pushInput("9");
+            this.calc.pushBuffer("9");
             break;
           case "add":
-            this.calc.pushInput("+");
+            this.calc.pushBuffer("+");
             break;
           case "sub":
-            this.calc.pushInput("-");
+            this.calc.pushBuffer("-");
             break;
           case "mul":
-            this.calc.pushInput("×");
+            this.calc.pushBuffer("×");
             break;
           case "div":
-            this.calc.pushInput("÷");
+            this.calc.pushBuffer("÷");
             break;
           case "dec":
-            this.calc.pushInput(".");
+            this.calc.pushBuffer(".");
             break;
           case "del":
-            this.calc.popInput();
+            this.calc.popBuffer();
             break;
           case "ce":
-            this.calc.clearInputs();
-            this.calc.pushInput("0");
+            this.calc.clearBuffer();
+            this.calc.pushBuffer("0");
             break;
           case "ans":
-            this.calc.setBfAns();
+            this.calc.addBufferFromBfAns();
             break;
           case "equal":
             this.calc.calc();
             break;
         }
-        console.log("render");
         this.renderDisplay();
       });
     };
+    protected configKey = (): void => {
+      document.addEventListener("keydown", (e) => {
+        switch (e.key) {
+          case "0":
+            this.calc.pushBuffer("0");
+            break;
+          case "1":
+            this.calc.pushBuffer("1");
+            break;
+          case "2":
+            this.calc.pushBuffer("2");
+            break;
+          case "3":
+            this.calc.pushBuffer("3");
+            break;
+          case "4":
+            this.calc.pushBuffer("4");
+            break;
+          case "5":
+            this.calc.pushBuffer("5");
+            break;
+          case "6":
+            this.calc.pushBuffer("6");
+            break;
+          case "7":
+            this.calc.pushBuffer("7");
+            break;
+          case "8":
+            this.calc.pushBuffer("8");
+            break;
+          case "9":
+            this.calc.pushBuffer("9");
+            break;
+          case "+":
+          case "＋":
+            this.calc.pushBuffer("+");
+            break;
+          case "-":
+          case "－":
+            this.calc.pushBuffer("-");
+            break;
+          case "*":
+          case "＊":
+            this.calc.pushBuffer("×");
+            break;
+          case "/":
+            this.calc.pushBuffer("÷");
+            break;
+          case ".":
+            this.calc.pushBuffer(".");
+            break;
+          case "Backspace":
+            this.calc.popBuffer();
+            break;
+          case "Escape":
+            this.calc.clearBuffer();
+            this.calc.pushBuffer("0");
+            break;
+          case "@":
+          case "＠":
+            this.calc.addBufferFromBfAns();
+            break;
+          case "=":
+          case "＝":
+          case "Enter":
+            this.calc.calc();
+            break;
+          default:
+            return;
+        }
+        this.renderDisplay();
+      });
+    };
+    protected clickedMotion = (node: any): void => {
+      node.classList.add("clickedMotion");
+      const timerId = setTimeout(() => {
+        node.classList.remove("clickedMotion");
+        clearTimeout(timerId);
+      }, 100);
+    };
 
-    public renderDisplay(): void {
-      console.log(`inputs : ${this.calc.getInputs()}`);
-      this.OUTPUT.display.innerHTML = this.calc.getInputs().join("");
-    }
+    // 出力操作
+    protected renderDisplay = (): void => {
+      console.log(`buffer : ${this.calc.getBuffer()}`);
+      this.OUTPUT.display.innerHTML = this.calc.getBuffer().join("");
+    };
   }
 
   new InOut();

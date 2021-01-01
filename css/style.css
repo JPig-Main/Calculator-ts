@@ -29,27 +29,39 @@ body {
   width: 380px;
   height: 440px;
   background-color: #ccc;
+  display: grid;
+  grid-template-rows: auto [_display]auto 0px [_btn]auto auto;
 }
 
 .calc-display-container {
   margin: auto;
   width: 334px;
-  height: 100px;
+  height: 80px;
+  grid-row: _display;
   background-color: #313131;
   border: 1px solid #eee;
+  display: grid;
+  grid-template-rows: auto [_main]auto auto;
 }
 
 #calc-display {
   margin: auto;
+  height: 36px;
   width: 80%;
+  grid-row: _main;
   text-align: end;
-  line-height: 100px;
+  line-height: 36px;
   color: #eee;
   font-size: 24px;
 }
 
+#calc-display::selection {
+  background-color: #ccc;
+}
+
 .calc-container > table.calc-input {
   margin: auto;
+  grid-row: _btn;
   border-collapse: collapse;
 }
 
@@ -60,6 +72,11 @@ body {
   border: 2px solid #eee;
   background-color: #313131;
   color: #fff;
+  user-select: none;
+  cursor: pointer;
+}
+.calc-container > table.calc-input td[id="none"] {
+  cursor: default;
 }
 
 .calc-container > table.calc-input td.clicked {
