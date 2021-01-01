@@ -4,6 +4,8 @@
 
 Web 上で使えるシンプルな電卓です.
 
+※ 2020年 大晦日に1人ハッカソンして作った作品です.
+
 (URL : https://jpig-main.github.io/Calculator-ts/)
 
 ## Usage
