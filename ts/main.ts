@@ -218,6 +218,7 @@
     }
     protected configBtn = (key: any): void => {
       const node = this.INPUT_BTN[key];
+      // TODO click -> mousedown
       node.addEventListener("click", () => {
         this.clickedMotion(node);
         switch (key) {
@@ -358,6 +359,7 @@
     };
     protected clickedMotion = (node: any): void => {
       node.classList.add("clickedMotion");
+      // TODO setTimeout -> mouseover
       const timerId = setTimeout(() => {
         node.classList.remove("clickedMotion");
         clearTimeout(timerId);
